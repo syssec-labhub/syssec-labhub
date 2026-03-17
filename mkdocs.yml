@@ -1,7 +1,7 @@
 site_name: 浙江大学春夏系统安全实验
-site_url: https://syssec25
-repo_url: https://github.com/syssec25/syssec25
-repo_name: syssec25/syssec25
+site_url: https://syssec-labhub
+repo_url: https://github.com/syssec-labhub/syssec-labhub
+repo_name: syssec-labhub/syssec-labhub
 theme:
   name: material
   palette:
