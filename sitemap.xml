@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://syssec25/</loc>
+         <loc>https://syssec-labhub/</loc>
          <lastmod>2026-03-17</lastmod>
     </url>
     <url>
-         <loc>https://syssec25/labs/</loc>
+         <loc>https://syssec-labhub/labs/</loc>
          <lastmod>2026-03-17</lastmod>
     </url>
     <url>
-         <loc>https://syssec25/proj/</loc>
+         <loc>https://syssec-labhub/proj/</loc>
          <lastmod>2026-03-17</lastmod>
     </url>
 </urlset>
