@@ -401,9 +401,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#9" class="md-nav__link">
+  <a href="#9-pentesting-agent" class="md-nav__link">
     <span class="md-ellipsis">
-      9.分组和展示
+      9. 渗透智能体（Pentesting Agent）的设计与实现
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.分组和展示
     </span>
   </a>
   
@@ -525,9 +534,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#9" class="md-nav__link">
+  <a href="#9-pentesting-agent" class="md-nav__link">
     <span class="md-ellipsis">
-      9.分组和展示
+      9. 渗透智能体（Pentesting Agent）的设计与实现
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.分组和展示
     </span>
   </a>
   
@@ -732,9 +750,28 @@ GPU驱动核心功能之一是实现用户态进程与GPU硬件间的共享内�
 <li><a href="https://github.com/github/securitylab/tree/main">GitHub Security Lab</a></li>
 <li><a href="https://github.blog/security/vulnerability-research/pwning-the-all-google-phone-with-a-non-google-bug/">The “not-Google” bug in the “all-Google” phone</a></li>
 </ol>
-<h2 id="9">9.分组和展示</h2>
-<p>本次final project采取自由分组，每组3人。请自行组队，并从给定题目中选择一个，确定分组和选题后，3.30之前将组员名单和选题填写至钉钉群共享文件。</p>
-<p><strong>注意</strong>：每个题目最多2组选择，同选题小组间需协商确定不同研究方向，避免雷同。</p>
+<h2 id="9-pentesting-agent">9. 渗透智能体（Pentesting Agent）的设计与实现</h2>
+<p>背景：
+传统的渗透测试（Pentesting）是一个高度依赖专家经验、流程复杂且耗时的过程。尽管存在许多自动化扫描工具（如 Nmap, Metasploit），但它们缺乏对复杂上下文的理解能力和动态决策能力。近年来，大语言模型（LLM）展现出了卓越的逻辑推理和代码生成能力，催生了“渗透智能体”这一新兴研究方向。这些智能体能够利用 LLM 作为“大脑”，通过调用各类安全工具，模拟人类攻击者的思维链（Chain-of-Thought），实现从信息收集到漏洞利用的自动化闭环。研究渗透智能体，不仅能提升安全防御的自动化水平，也有助于理解未来 AI 驱动的威胁形态。</p>
+<p>描述：
+本项目要求学生设计并实现一个基于 LLM 的自动化渗透测试智能体系统。该智能体应能够针对给定的目标，自主规划攻击路径，选择并执行合适的安全工具，并根据工具反馈的结果调整下一步策略。</p>
+<p>里程碑：
+1. 调研当前主流的渗透智能体框架，分析其任务规划与工具调用的实现机制，撰写一份不少于5篇核心论文的综述报告。并且对期末实现的具体内容进行规划（综述）。
+2. （二选一）使用 LangChain 或其他框架，集成至少 3 种安全工具，实现从扫描到漏洞确认的自动化流程，实现至少一种完整攻击场景（如从信息收集到获取权限）的自动化执行，并对比分析不同 LLM 后端（如 GPT-4, DeepSeek, Claude）在渗透任务中的表现（实现）。
+3. （二选一）在现有开源项目（如 PentestGPT等）基础上，针对至少 3 种特定漏洞场景进行<strong>优化</strong>或新的工具模块（封装命令行工具并且接入）的<strong>添加</strong>，并对比分析不同 LLM 后端（如 GPT-4, DeepSeek, Claude）在渗透任务中的表现（实现）。</p>
+<p>中期（第11周）完成： 综述</p>
+<p>期末（第16周）完成： 实现</p>
+<p>参考文档：</p>
+<ol>
+<li><a href="https://www.usenix.org/conference/usenixsecurity24/presentation/deng">Deng G, Liu Y, Mayoral-Vilches V, et al. PentestGPT: Evaluating and harnessing large language models for automated penetration testing</a></li>
+<li><a href="https://dl.acm.org/doi/abs/10.1145/3719027.3744855">Ji Z, Wu D, Jiang W, et al. Measuring and augmenting large language models for solving capture-the-flag challenges</a></li>
+<li><a href="https://arxiv.org/abs/2510.12200">Ren X, Jiang P, Li K, et al. HackWorld: Evaluating Computer-Use Agents on Exploiting Web Application Vulnerabilities</a></li>
+<li><a href="https://ieeexplore.ieee.org/abstract/document/10646663/">Ullah S, Han M, Pujar S, et al. Llms cannot reliably identify and reason about security vulnerabilities (yet?): A comprehensive evaluation, framework, and benchmarks</a></li>
+<li><a href="https://python.langchain.com/docs/tutorials/agents/">LangChain Documentation: Build an Agent (ReAct Framework)</a></li>
+</ol>
+<h2 id="10">10.分组和展示</h2>
+<p>本次final project采取自由分组，每组3人。请自行组队，并从给定题目中选择一个，确定分组和选题后，4.5日23:59之前将组员名单和选题填写至钉钉群共享文件。</p>
+<p><strong>注意</strong>：每个题目最多2组选择，选题时注意右侧题目已选数量。分组选题结束后，将会公布结果，同选题小组间需协商确定不同研究方向，避免雷同（并在中期之前填写表格）。</p>
 <p>实验过程中将设置两次检查：</p>
 <ul>
 <li>中期检查：根据各自题目要求，提交调研报告，展示调研进展，并且对期末实现的具体内容作出初步规划。</li>
