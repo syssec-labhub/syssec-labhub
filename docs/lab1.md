@@ -211,7 +211,7 @@ commit_cred 函数用于给当前进程设置新的 cred 结构体。通过调�
 
 2.如果你嫌下载、安装虚拟机麻烦或是arm mac，可以只下载**不包含虚拟机的源文件** `lab1-source.zip`，自行进行环境配置。
 
-  - 点击[百度网盘链接](https://pan.baidu.com/s/1JuQ2T17iFZ4ssPpj8p8m4A?pwd=bedq),访问码：bedq
+  - 点击[百度网盘链接](https://pan.baidu.com/s/1yw3RdNt1Laha0BRwveCNPQ?pwd=g7mz),访问码：g7mz
 
 虚拟机内包含了完成本次实验所需要的各种环境。本次实验的文件保存在虚拟机 `~/lab1`目录中。
 
