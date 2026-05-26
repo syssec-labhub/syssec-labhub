@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://syssec-labhub/lab2/">
       
       
+        <link rel="prev" href="../lab1/">
+      
+      
+        <link rel="next" href="../proj/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Linux内核漏洞攻防 - JOP攻击与防护 - 浙江大学春夏系统安全实验</title>
+        <title>Lab 2 - 浙江大学春夏系统安全实验</title>
       
     
     
@@ -106,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Linux内核漏洞攻防 - JOP攻击与防护
+              Lab 2
             
           </span>
         </div>
@@ -259,6 +263,329 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Lab 2
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Lab 2
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 实验目的
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 实验内容
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 实验环境
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 前置知识
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4 前置知识">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-uaf" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 UAF漏洞原理与利用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-linux-slab" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Linux slab 内存管理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Linux slab 内存管理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#421-slab" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2.1 什么是 slab ？
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#422-slab" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2.2 slab分配机制
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Linux 设备及设备驱动
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Linux 设备及设备驱动">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#431-devptmx-tty_struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3.1 /dev/ptmx 伪终端和 tty_struct 结构的利用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#432-ioctl" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3.2 利用 ioctl 控制寄存器
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-jop" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.4 JOP 基础
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-cred-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.5 利用 cred 结构体获取 root 权限
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.5 利用 cred 结构体获取 root 权限">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#451-struct-cred" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.5.1 struct cred的作用
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 实验介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5 实验介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 实验环境搭建
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-zjudev" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 zjudev接口
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-uaf" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 UAF漏洞介绍
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 struct结构介绍
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6 实验任务
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6 实验任务">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-task1" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Task1：设备接口的使用。
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-task2root-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Task2：简单获取root shell
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-task3gadget-root-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3 Task3：gadget 获取 root shell
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-task4-cfi" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4 Task4: 内核 CFI 保护
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. 实验提交
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
