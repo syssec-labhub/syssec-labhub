@@ -50,33 +50,29 @@ eBPF Verifier是Linux内核安全的关键组件，程序在加载之前必须�
 5. [Chaoyuan Peng, Muhui Jiang, Lei Wu, and Yajin Zhou. 2024. Toss a Fault to BpfChecker: Revealing Implementation Flaws for eBPF runtimes with Differential Fuzzing. ]( https://doi.org/10.1145/3658644.3690237)
 
 
-## 2.基于人工智能的代码漏洞检测
+## 2. 仓库级漏洞检测（Repository-level Vulnerability Detection）
 
 背景：
-人工开展代码漏洞挖掘费时费力，传统静态漏洞检测能够实现自动化识别可疑漏洞点，但误报率较高且难以检测复杂的上下文漏洞。基于人工智能的漏洞代码检测定位具有理解代码上下文相关性并对特征进行多层概括和抽象的能力，通过模型的自身泛化能力自动检测代码中相似的漏洞，可代替人工开展疑似漏洞确认，有效提高检测效率。
+
+真实漏洞往往跨越多个文件和调用链。只对单个函数做二分类，容易遗漏调用方、被调用方和配置上下文，也难以判断模型能否区分漏洞版本与修复版本。本项目关注给定仓库版本与待检查改动时的漏洞检测与定位。
 
 描述：
-本项目旨在使同学们了解漏洞挖掘的基本知识，学习训练多种神经网络模型进行漏洞检测任务。更进一步尝试通过多种模型优化策略提升模型定位漏洞的效果，比如进行更细粒度的程序切片、使用包含更多语义信息的代码标识方法、提高模型识别漏洞根因位置的能力等。
+
+从公开的仓库级漏洞数据集中选取可复现样本，固定仓库 commit 和依赖版本，比较三种方法：只看目标函数的 baseline、检索调用关系及相关文件的上下文增强方法、按需读取代码和调用工具的 agent 方法。报告漏洞判断及根因定位结果，分析上下文选择、误报和成本。可以使用现成模型或 API，不要求从零训练大模型。
 
 里程碑：
 
-  1. 理解神经网络模型检测源代码漏洞的技术原理，调研三篇现有源代码漏洞检测工作，综述其核心方法及工作
-  2. 实现已有源代码漏洞检测模型，在测试集上提升准确度
+1. 中期：调研至少 3 篇相关工作，确定数据集、样本筛选规则、漏洞与修复版本的划分、评价指标；完成 baseline 和可运行的评测脚本。
+2. 期末：在同一批样本上比较 baseline、上下文检索和 agent/tool-assisted 方法；至少覆盖 30 组漏洞/修复配对样本，输出检测指标、定位准确率、误报案例、token/tool-call 与运行成本，并对失败案例作根因分析。样本量不足时须事先说明筛选原因。
 
-  中期（第11周）完成: 综述
+中期（第11周）完成：综述、数据与 baseline。
+期末（第16周）完成：方法比较、实验与分析。
 
-  期末（第16周）完成: 实现
+提交仓库 commit、样本清单、提示词/配置、运行脚本和原始结果；训练集与测试集须按仓库或时间隔离，并检查重复样本，避免数据泄漏。
 
 参考文档：
 
-1. VulChecker: Graph-based Vulnerability Localization in Source Code
-https://github.com/ymirsky/VulChecker
-2. Devign: Effective vulnerability identification by learning comprehensive program semantics via graph neural networks
-3. GPTScan: Detecting Logic Vulnerabilities in Smart Contracts by Combining GPT with Program Analysis
-https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
-4. Codebert: A pre-trained model for programming and natural languages[J]. arXiv preprint arXiv:2002.08155, 2020.
-5. Contrabert: Enhancing code pre-trained models via contrastive learning[C]//2023 IEEE/ACM 45th International Conference on Software Engineering 
-
+1. [JitVul: Benchmarking LLMs and LLM-based Agents in Practical Vulnerability Detection for Code Repositories (ACL 2025)](https://aclanthology.org/2025.acl-long.1490/)
 
 ## 3.Android应用抗加固分析
 背景：
@@ -143,35 +139,30 @@ https://mp.weixin.qq.com/s/kZfsa7oi_e9rTTjSQR7mXg
 3. 于颖超, 陈左宁, 甘水滔, 等. 嵌入式设备固件安全分析技术研究[J]. 计算机学报, 2021.
 
 
-## 6.基于大模型生成代码的评估指标设计和测试
+## 6. 安全编码智能体评测（Secure Coding Agent Evaluation）
 
 背景：
-大语言模型（LLMs）在代码生成领域已取得显著进展，涌现出大量（代码）大模型（如Qwen-Coder、DeepSeek-Coder、CodeLlama、Qwen）。这些模型在代码质量、执行效率及多语言支持等方面差异显著。虽然现有热门代码生成评估体系（如LiveCodeBench、HumanEval、MBPP）已提出多维评估指标，但他们大多仅关注**正确性**，却忽略了诸如**安全性、鲁棒性、可靠性、性能、版权与合规性**等*其他关键因素*，毕竟**可执行代码并不等同于可靠和健壮的代码**。因此，我们首先需要调研现有的热门大模型生成代码评估指标，然后总结**批判**并提出值得改进的地方。比如有人提出评估大模型**滥用API**程度的方法；也有人提出评测代码大模型**效率**的方法。
+
+编程智能体可以在多文件仓库中读取代码、修改文件并运行测试，但功能测试通过不等于修改安全。真实软件任务需要同时检验功能正确性和安全性，并分析智能体在什么条件下引入漏洞。
 
 描述：
-本项目通过系统性调研与实践，探索大模型代码评估的创新方法，涵盖了大模型的推理运行、评估标准创新设计运行、测试样例设计等多个关键环节。
+
+选用公开的多文件软件维护任务或现有安全编码基准，固定仓库版本、任务描述、可用工具和运行预算。为每个任务准备功能 oracle（测试预期功能）与安全 oracle（测试已知危险行为或安全不变量），在隔离环境中比较纯 LLM 与可调用工具的 coding agent。重点分析“功能通过但安全失败”的提交，而不是自行发明一个单一分数。
 
 里程碑：
 
-1. 总结和批判现有热门大模型生成代码评估指标，不低于**5**种（综述）。
-2. **自行设计**不同于热门评估指标的创新指标并**运行**这个指标。设计方面要求在上述*其他关键因素*中的一个方面创新。可参考开源代码，但不可抄袭。测试集和测试样例（如需）均需**自行设计**，数量**5~10**个即可。被测试的大模型数量不得低于**1**个（实现）。
+1. 中期：调研至少 3 篇安全编码或编程智能体评测工作，选取至少 8 个可复现的仓库任务，完成两个 oracle、隔离运行环境和一个 baseline。
+2. 期末：在相同任务、模型版本和 token/tool-call 上限下比较纯 LLM 与 coding agent；分别统计功能通过率、安全通过率、两者同时通过率及运行成本；分析至少 3 个成功但不安全或任务失败的案例，记录可观察的工具调用和文件改动轨迹。
 
-中期（第11周）完成：综述
+中期（第11周）完成：综述、任务和 oracle。
+期末（第16周）完成：对照实验、结果与失败分析。
 
-期末（第16周）完成：实现
+提交任务/仓库 commit 清单、两个 oracle 的源码、模型与 agent 版本、提示词与配置、预算、运行脚本及原始结果。
 
 参考文档：
 
-1. DeepSeek-AI, Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, et al. 2025. “DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.” 
-2. DeepSeek-AI, Aixin Liu, Bei Feng, Bing Xue, Bingxuan Wang, Bochao Wu, Chengda Lu, et al. 2024. “DeepSeek-V3 Technical Report.” 
-3. DeepSeek-AI, Qihao Zhu, Daya Guo, Zhihong Shao, Dejian Yang, Peiyi Wang, Runxin Xu, et al. 2024. “DeepSeek-Coder-V2: Breaking the Barrier of Closed-Source Models in Code Intelligence.” 
-4. Hui, Binyuan, Jian Yang, Zeyu Cui, Jiaxi Yang, Dayiheng Liu, Lei Zhang, Tianyu Liu, et al. 2024. “Qwen2.5-Coder Technical Report.” 
-5. Rozière, Baptiste, Jonas Gehring, Fabian Gloeckle, Sten Sootla, Itai Gat, Xiaoqing Ellen Tan, Yossi Adi, et al. 2024. “Code Llama: Open Foundation Models for Code.”
-6. Austin, Jacob, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski, David Dohan, Ellen Jiang, et al. 2021. “Program Synthesis with Large Language Models.”
-7. Chen, Mark, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de Oliveira Pinto, Jared Kaplan, Harri Edwards, et al. 2021. “Evaluating Large Language Models Trained on Code.”
-8. Jain, Naman, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida Wang, Armando Solar-Lezama, Koushik Sen, and Ion Stoica. 2024. “LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code.”
-9. Du, Mingzhe, Anh Tuan Luu, Bin Ji, Qian Liu, and See{-}Kiong Ng. 2024. “Mercury: {A} Code Efficiency Benchmark for Code Large Language Models.” In _Proceedings of the Advances in Neural Information Processing Systems 38: Annual Conference on Neural Information Processing Systems 2024_, 37:16601–22.
-10. Zhong, Li, and Zilong Wang. 2024. “Can LLM Replace Stack Overflow? A Study on Robustness and Reliability of Large Language Model Code Generation.” _Proceedings of the AAAI Conference on Artificial Intelligence_ 38 (19): 21841–49.
+1. [SecureVibeBench: Benchmarking Secure Vibe Coding of AI Agents via Reconstructing Vulnerability-Introducing Scenarios (ACL 2026)](https://aclanthology.org/2026.acl-long.1107/)
+2. [SecureVibeBench 开源任务与评测代码](https://github.com/iCSawyer/SecureVibeBench)
 
 ## 7.基于MTE的内存完整性保护
 

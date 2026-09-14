@@ -4,3 +4,6 @@
 site/
 .idea/
 .gdbinit
+__pycache__/
+dist/
+.commandcode/

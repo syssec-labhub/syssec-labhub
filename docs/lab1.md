@@ -1,5 +1,10 @@
 # Linux内核漏洞攻防 - ROP攻击与防护
 
+!!! info "实验环境：迁移到 Linux 6.12 LTS"
+    本学期实验环境由 Ubuntu 20.04 + Linux 5.15 迁移到 **Ubuntu 24.04 LTS + QEMU/AArch64 + Linux 6.12.109 LTS**（[长期维护分支说明](https://www.kernel.org/releases.html)、[官方源码](https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.109.tar.xz)）。新版环境用 QEMU 启动预编译的 `Image`/`vmlinux` 和课程 rootfs，并提供一键构建与启动脚本；镜像由助教构建后通过课程网盘发布。**发布前请勿把本页的 5.15 镜像当作 6.12 环境。**
+
+    过渡期内本页 Task 1–4 仍可在原有 5.15 教学镜像上完成。注意 6.12 修改了凭据相关 API（见 3.4 节），因此 Task 2/3 的提权链在 6.12 上不能直接照搬，升级版任务需另行设计。
+
 ## 1. 实验目的
 
 * 了解 ARM64 栈的布局，学习 buffer overflow 漏洞的原理与利用方式
@@ -195,11 +200,12 @@ stack canary 在函数的开始时push到栈上，在函数返回前，检查是
 
 在 Linux 内核中，结构体 cred 记录了进程的权限，该结构体保存了该进程的 uid, gid 等信息（Linux 用 task_struct 结构来管理每个进程，该结构体中有个成员指向 cred）。如果攻击者能够修改进程的 cred 结构体，将 uid 等字段修改为0,该进程就拥有了 root 权限。
 
-Linux 内核主要通过以下两个API修改进程权限：
+Linux 内核主要通过以下两个 API 修改进程权限：
 
-其中 prepare_kernel_cred 函数用于构造新的 cred 结构体，当给该函数传递的参数为 NULL 时，该函数会构造一个拥有 root 权限的 cred 结构体；
+* `prepare_kernel_cred(daemon)`：依据 `daemon` 的凭据构造一份新的 cred；当 `daemon` 为 `&init_task` 时，得到 uid=0、拥有完整 capability 的 root 凭据。
+* `commit_creds(new)`：把 `new` 安装到当前进程，从而改变它的权限。
 
-commit_cred 函数用于给当前进程设置新的 cred 结构体。通过调用 commit_creds(prepare_kernel_cred(0)) ,就能将当前进程的权限修改为 root 权限。
+5.15 时代的经典 ROP 提权链是 `commit_creds(prepare_kernel_cred(0))`。**这条链在 Linux 6.12 上已经失效**：`prepare_kernel_cred()` 收到 `NULL` 时会触发 `WARN_ON_ONCE` 并返回 `NULL`，特权凭据必须显式传入 `&init_task`。因此，把旧 PoC 只改内核版本并不能得到可用的新实验，升级版需要重新设计凭据相关的教学任务与镜像并单独验证。本页 Task 1–3 仍按 5.15 镜像上的旧方法完成。
 
 ## 4.实验环境与介绍
 

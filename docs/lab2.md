@@ -19,7 +19,8 @@
 ## 3 实验环境
 
 * 实验所需工具：
-  * Linux kernel 5.15
+  * Linux kernel 5.15（Task 1–3）
+  * Linux kernel 6.12.109（仅 Task 4，KCFI 对照镜像，见 6.4 节）
   * QEMU 模拟器 （qemu-system-aarch64）
   * gdb-multiarch 多架构调试工具调试 kernel
   * gdb 调试工具调试用户态程序
@@ -255,7 +256,7 @@ user@user-Super-Server:~/Desktop/experiment$ tree
 
 ### 5.1 实验环境搭建
 
-通过[浙大云盘](https://pan.zju.edu.cn/share/913fb168cf0dc795da62abe451) 或 [百度网盘](https://pan.baidu.com/s/1Ri2aWyBBblkbD2GtnmCiWQ?pwd=adjg)下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。
+通过[浙大云盘](https://pan.zju.edu.cn/share/913fb168cf0dc795da62abe451) 或 [百度网盘](https://pan.baidu.com/s/1Ri2aWyBBblkbD2GtnmCiWQ?pwd=adjg)下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。该压缩包对应 Task 1–3 的 Linux 5.15 环境；Task 4 使用独立的 6.12.109 对照镜像，获取与运行方式见 6.4 节。
 
 解压之后路径如下
 
@@ -498,14 +499,18 @@ void zju_gadget3(void)
 >
 > Question 4:为什么第二步可以直接ret获取到 `tty_struct`结构体的地址？ret 执行前后的控制流是什么样的？
 
-### 6.4 Task4: 内核 CFI 保护
+### 6.4 Task4: JOP against KCFI（Linux 6.12.109）
 
-为了抵御上述劫持内核控制流的JOP攻击，安全研究人员提出了控制流完整性的保护方案（[Control-Flow Integrity](https://lwn.net/Articles/810077/)）。目前内核支持匹配函数类型的CFI保护，需要利用 Clang/LLVM 编译器编译内核源码，最后得到支持CFI的内核镜像。对于每个间接调用，编译器通过匹配其函数指针和函数的类型，提前计算出潜在的目标函数集合，生成跳转表，限制间接调用的目标函数必须在集合中。
+本节使用**独立的 6.12.109 防护实验环境**。上文 Task 1–3 与原下载包仍使用 Linux 5.15；原包中的 `kernel/cfi` 是旧实验镜像，不能当作本节的 KCFI 镜像。新版资源的构建、启动和验证方法见 [Lab 2 KCFI 资源说明](https://github.com/syssec-labhub/syssec-labhub/tree/main/resources/lab2-kcfi)。构建脚本从官方 6.12.109 源码生成 `kernel/nocfi/` 和 `kernel/kcfi/` 两套镜像；两者使用相同的配置基础，以 KCFI 开关作对比。本节采用上游内核自带的 LKDTM 自测，不依赖旧版漏洞驱动。
+
+KCFI 是 Clang 针对内核等底层软件的**前向控制流完整性**检查：编译器在间接调用点比较目标函数的类型标识，不匹配时触发 CFI 故障。它不要求 LTO，也不会把函数指针替换成旧式 CFI 跳转表引用。因此，任意 `br/blr` gadget 不一定能作为 `tty_operations` 间接调用的目标；但**类型兼容的目标仍可能通过检查**，KCFI 也不负责修复 UAF。有关机制可参考 [Clang KCFI 文档](https://clang.llvm.org/docs/ControlFlowIntegrity.html#fsanitize-kcfi) 与 [Linux LKDTM 文档](https://docs.kernel.org/fault-injection/provoke-crashes.html)。
 
 实验内容如下：
 
-* 使用objdump反汇编开启CFI的内核镜像 `vmlinux`，获得汇编代码，**提交任意一个间接调用的汇编代码**，并详细解释CFI是如何防御JOP攻击。
-* 重新运行JOP攻击程序，查看是否CFI是否能起作用。**提交dmesg中包含CFI Failure截图**。
+* 分别启动 `nocfi` 与 `kcfi` 镜像，执行资源说明中的 `CFI_FORWARD_PROTO` 自测。它先进行类型匹配的间接调用，再进行类型不匹配的间接调用。记录两种镜像的控制台输出；KCFI 镜像的故障是**预期实验结果**，需要重启 QEMU 继续操作。
+* 使用 `llvm-objdump-18 -d kernel/kcfi/vmlinux` 查找一个间接调用及其 KCFI 类型检查，提交相关汇编片段和解释。报告中说明为何 Task 3 中的任意 gadget 目标在 KCFI 下可能被拒绝，以及为什么函数类型兼容并不等于程序安全。
+
+**提交材料**：`nocfi`/`kcfi` 的内核版本与配置、两次自测的控制台截图或日志、所选间接调用汇编片段，以及上述机制分析。这个独立自测用于验证 KCFI 的类型检查；它不等同于在 6.12 上重新运行旧版 JOP PoC。
 
 ## 7. 实验提交
 
