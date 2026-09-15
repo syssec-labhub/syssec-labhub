@@ -1,7 +1,7 @@
 # Linux内核漏洞攻防 - ROP攻击与防护
 
 !!! info "实验环境说明"
-    本实验**继续使用原有环境：Ubuntu 20.04 + Linux 5.15**（QEMU/AArch64），虚拟机与镜像的下载方式、网盘链接与往年完全一致（见 4.1 节）。本学期新增的 **Linux 6.12.109 LTS** 内核**不用于 Lab 1**，仅用于 [Lab 2 Task 4（KCFI 对照）](lab2.md)与选做的 [Lab 3（KASAN/syzkaller）](lab3.md)，其镜像将由助教单独构建并通过课程网盘发布。
+    本实验**继续使用原有环境：Ubuntu 20.04 + Linux 5.15**（QEMU/AArch64），虚拟机与镜像的下载方式、网盘链接与往年完全一致（见 4.1 节）。本学期新增的 **Linux 6.12.109 LTS** 内核**不用于 Lab 1**，仅用于 [Lab 2 Task 4（KCFI 对照）](lab2.md)与选做的 [Lab 3（KASAN/syzkaller）](lab3.md)；两套实验资源均已发布，下载入口见对应实验页面。
 
 ## 1. 实验目的
 

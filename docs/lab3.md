@@ -2,8 +2,8 @@
 
 Lab 1、Lab 2 从一个**已知**的内存错误出发，研究如何利用它以及内核如何防护；本实验从**自动发现和诊断**出发，练习完整的漏洞处理流程：**发现 → 复现 → 最小化 → 定位 → 修复**。本实验为选做实验，成绩评定方式以课程通知为准。
 
-!!! info "资源状态"
-    本页的 KASAN 报告分析练习和脚本已经提供，可直接运行。Task 2–4 需要的 ARM64 QEMU + Linux 6.12.109 + KASAN/KCOV 内核与 `zjufuzz` 教学驱动，可由[助教构建套件](https://github.com/syssec-labhub/syssec-labhub/tree/main/resources/lab3)一键构建；预编译镜像、syzkaller 与 rootfs 由助教通过课程网盘发布。**发布前请勿把 Lab 1/2 的 5.15 镜像当作 Lab 3 环境。**
+!!! info "实验资源"
+    完整的 [lab3.zip](https://pan.baidu.com/s/1TUxWoZEwScCmd_2YcvyU8A?pwd=spjv)（提取码：`spjv`）已经发布，包含 Task 2–4 所需的 ARM64 QEMU + Linux 6.12.109 + KASAN/KCOV 内核、`zjufuzz` 教学驱动、syzkaller 与 rootfs；本页的 KASAN 报告分析练习和脚本也可直接下载运行。Lab 3 使用独立环境，请勿使用 Lab 1/2 的 5.15 镜像。
 
 ## 1. 实验目的
 
@@ -15,7 +15,7 @@ Lab 1、Lab 2 从一个**已知**的内存错误出发，研究如何利用它�
 ## 2. 实验工具
 
 * qemu-system-aarch64
-* syzkaller（syz-manager、syz-executor，课程网盘提供预编译二进制）
+* syzkaller（syz-manager、syz-executor，实验包内提供预编译二进制）
 * python3（用于运行报告解析脚本）
 * 文本编辑器与 diff 工具（用于阅读源码和编写补丁）
 
@@ -80,7 +80,7 @@ syzkaller 的 [Linux host / QEMU / ARM64 官方指南](https://github.com/google
 
 ### 4.1 实验环境
 
-本实验使用与 Lab 1/2 **不同的内核环境**：ARM64 QEMU + **Linux 6.12.109 + Generic KASAN + KCOV**。完整资源包发布后，助教会通过课程网盘提供：`Image`、`vmlinux`、`System.map`、内核 `config`、`SHA256SUMS` 清单、ARM64 rootfs 与 SSH key、`syz-manager`/`syz-executor` 二进制、适配好的 `manager.cfg`，以及待修复的驱动源码 `zjufuzz.c`。
+本实验使用与 Lab 1/2 **不同的内核环境**：ARM64 QEMU + **Linux 6.12.109 + Generic KASAN + KCOV**。请下载并解压 [lab3.zip](https://pan.baidu.com/s/1TUxWoZEwScCmd_2YcvyU8A?pwd=spjv)（提取码：`spjv`）；压缩包包含 `Image`、`vmlinux`、`System.map`、内核 `config`、`SHA256SUMS` 清单、ARM64 rootfs 与 SSH key、`syz-manager`/`syz-executor` 二进制、适配好的 `manager.cfg`，以及待修复的驱动源码 `zjufuzz.c`。
 
 下载后首先核验镜像完整性：
 
@@ -88,7 +88,7 @@ syzkaller 的 [Linux host / QEMU / ARM64 官方指南](https://github.com/google
 sha256sum -c SHA256SUMS
 ```
 
-内核与驱动的构建方法见[助教构建套件](https://github.com/syssec-labhub/syssec-labhub/tree/main/resources/lab3)。学生不需要从零编译内核或 syzkaller。
+学生直接使用实验包中的预编译环境，不需要从零编译内核或 syzkaller。
 
 ### 4.2 zjufuzz 教学驱动
 
@@ -135,7 +135,7 @@ python3 triage.py sample_kasan_report.txt
 
 ### Task 1：手工解析 KASAN 报告
 
-Task 1 的正式提交要在镜像包发布后使用**真实** KASAN 报告（自己 fuzz 出来的，或资源包随附的），先手工标注以下内容，再用 `triage.py` 自查：
+Task 1 的正式提交使用**真实** KASAN 报告（自己 fuzz 出来的，或实验包随附的），先手工标注以下内容，再用 `triage.py` 自查：
 
 1. KASAN 报告的错误类型、访问方向和字节数是什么？
 2. 触发访问的调用栈与对象的分配、释放调用栈分别在哪里？
