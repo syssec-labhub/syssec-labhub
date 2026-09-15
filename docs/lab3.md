@@ -3,7 +3,16 @@
 Lab 1、Lab 2 从一个**已知**的内存错误出发，研究如何利用它以及内核如何防护；本实验从**自动发现和诊断**出发，练习完整的漏洞处理流程：**发现 → 复现 → 最小化 → 定位 → 修复**。本实验为选做实验，成绩评定方式以课程通知为准。
 
 !!! info "实验资源"
-    完整的 [lab3.zip](https://pan.baidu.com/s/1TUxWoZEwScCmd_2YcvyU8A?pwd=spjv)（提取码：`spjv`）已经发布，包含 Task 2–4 所需的 ARM64 QEMU + Linux 6.12.109 + KASAN/KCOV 内核、`zjufuzz` 教学驱动、syzkaller 与 rootfs；本页的 KASAN 报告分析练习和脚本也可直接下载运行。Lab 3 使用独立环境，请勿使用 Lab 1/2 的 5.15 镜像。
+    完整的 [lab3.zip](https://pan.baidu.com/s/1TUxWoZEwScCmd_2YcvyU8A?pwd=spjv)（提取码：`spjv`）已经发布，包含 Task 2–4 所需的预编译 Linux 6.12.109 + KASAN/KCOV 内核、`zjufuzz` 教学驱动、syzkaller 与 rootfs；本页的 KASAN 报告分析练习和脚本也可直接下载运行。Lab 3 使用独立环境，请勿使用 Lab 1/2 的 5.15 镜像。
+
+!!! warning "宿主环境需自行准备"
+    `lab3.zip` 不包含 Ubuntu 24.04 LTS 和 QEMU。请自行下载并安装 [Ubuntu 24.04 LTS](https://releases.ubuntu.com/noble/)，然后安装提供 `qemu-system-aarch64` 的 [`qemu-system-arm`](https://packages.ubuntu.com/noble/qemu-system-arm) 软件包：
+
+    ```bash
+    sudo apt update
+    sudo apt install qemu-system-arm
+    qemu-system-aarch64 --version
+    ```
 
 ## 1. 实验目的
 

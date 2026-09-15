@@ -503,6 +503,15 @@ void zju_gadget3(void)
 
 本节使用**独立的 6.12.109 防护实验环境**。上文 Task 1–3 与原下载包仍使用 Linux 5.15；原包中的 `kernel/cfi` 是旧实验镜像，不能当作本节的 KCFI 镜像。请下载 [lab2-task4.zip](https://pan.baidu.com/s/1mLkhcOAkKTvo4wf6N3r_0g?pwd=5pqs)（提取码：`5pqs`），解压后按包内说明启动 `kernel/nocfi/` 和 `kernel/kcfi/` 两套预编译镜像；两者使用相同的配置基础，仅以 KCFI 开关作对比。本节采用上游内核自带的 LKDTM 自测，不依赖旧版漏洞驱动。
 
+!!! warning "宿主环境需自行准备"
+    `lab2-task4.zip` 不包含宿主操作系统。请自行下载并安装 [Ubuntu 24.04 LTS](https://releases.ubuntu.com/noble/)；如果系统中尚未安装 QEMU，请安装提供 `qemu-system-aarch64` 的 [`qemu-system-arm`](https://packages.ubuntu.com/noble/qemu-system-arm) 软件包：
+
+    ```bash
+    sudo apt update
+    sudo apt install qemu-system-arm
+    qemu-system-aarch64 --version
+    ```
+
 KCFI 是 Clang 针对内核等底层软件的**前向控制流完整性**检查：编译器在间接调用点比较目标函数的类型标识，不匹配时触发 CFI 故障。它不要求 LTO，也不会把函数指针替换成旧式 CFI 跳转表引用。因此，任意 `br/blr` gadget 不一定能作为 `tty_operations` 间接调用的目标；但**类型兼容的目标仍可能通过检查**，KCFI 也不负责修复 UAF。有关机制可参考 [Clang KCFI 文档](https://clang.llvm.org/docs/ControlFlowIntegrity.html#fsanitize-kcfi) 与 [Linux LKDTM 文档](https://docs.kernel.org/fault-injection/provoke-crashes.html)。
 
 实验内容如下：
