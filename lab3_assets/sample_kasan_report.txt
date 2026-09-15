@@ -1,0 +1,19 @@
+Synthetic teaching sample; not a real kernel crash.
+
+BUG: KASAN: slab-out-of-bounds in zjufuzz_write+0x40/0x80
+Write of size 4096 at addr ffff00000012f000 by task sample/42
+
+CPU: 0 PID: 42 Comm: sample Not tainted 6.12.109 #1
+Call Trace:
+ zjufuzz_write+0x40/0x80
+ vfs_write+0xa0/0x260
+ ksys_write+0x64/0xc0
+
+Allocated by task 42:
+ zjufuzz_open+0x18/0x60
+ chrdev_open+0x90/0x160
+
+The buggy address belongs to the object at ffff00000012f000
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 4032 bytes inside of
+ 64-byte region [ffff00000012f000, ffff00000012f040)

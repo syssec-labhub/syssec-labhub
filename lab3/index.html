@@ -1,0 +1,975 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://syssec-labhub.github.io/syssec-labhub/lab3/">
+      
+      
+        <link rel="prev" href="../lab2/">
+      
+      
+        <link rel="next" href="../proj/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Lab 3 (Optional) - 浙江大学春夏系统安全实验</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-3optionallinux-kasan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="浙江大学春夏系统安全实验" class="md-header__button md-logo" aria-label="浙江大学春夏系统安全实验" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            浙江大学春夏系统安全实验
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3 (Optional)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/syssec-labhub/syssec-labhub" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    syssec-labhub/syssec-labhub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="浙江大学春夏系统安全实验" class="md-nav__button md-logo" aria-label="浙江大学春夏系统安全实验" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    浙江大学春夏系统安全实验
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/syssec-labhub/syssec-labhub" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    syssec-labhub/syssec-labhub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lab 2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Lab 3 (Optional)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Lab 3 (Optional)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 实验目的
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 实验工具
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 背景介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 背景介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-kasan" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 KASAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-kcov" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 KCOV
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-syzkaller" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 syzkaller
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 实验环境与介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 实验环境与介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 实验环境
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-zjufuzz" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 zjufuzz 教学驱动
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 手工启动与复现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 实验任务
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 实验任务">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-0kasan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 0：KASAN 报告入门
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-1-kasan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 1：手工解析 KASAN 报告
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 2：覆盖率引导的模糊测试
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 3：复现与最小化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 4：定位、修复与回归
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 实验提交
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proj/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Final Project
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 实验目的
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 实验工具
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 背景介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 背景介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-kasan" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 KASAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-kcov" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 KCOV
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-syzkaller" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 syzkaller
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 实验环境与介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 实验环境与介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 实验环境
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-zjufuzz" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 zjufuzz 教学驱动
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 手工启动与复现
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 实验任务
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 实验任务">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-0kasan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 0：KASAN 报告入门
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-1-kasan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 1：手工解析 KASAN 报告
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 2：覆盖率引导的模糊测试
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 3：复现与最小化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 4：定位、修复与回归
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 实验提交
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="lab-3optionallinux-kasan">Lab 3（Optional）：Linux 内核模糊测试、KASAN 与崩溃分析</h1>
+<p>Lab 1、Lab 2 从一个<strong>已知</strong>的内存错误出发，研究如何利用它以及内核如何防护；本实验从<strong>自动发现和诊断</strong>出发，练习完整的漏洞处理流程：<strong>发现 → 复现 → 最小化 → 定位 → 修复</strong>。本实验为选做实验，成绩评定方式以课程通知为准。</p>
+<div class="admonition info">
+<p class="admonition-title">资源状态</p>
+<p>本页的 KASAN 报告分析练习和脚本已经提供，可直接运行。Task 2–4 需要的 ARM64 QEMU + Linux 6.12.109 + KASAN/KCOV 内核与 <code>zjufuzz</code> 教学驱动，可由<a href="https://github.com/syssec-labhub/syssec-labhub/tree/main/resources/lab3">助教构建套件</a>一键构建；预编译镜像、syzkaller 与 rootfs 由助教通过课程网盘发布。<strong>发布前请勿把 Lab 1/2 的 5.15 镜像当作 Lab 3 环境。</strong></p>
+</div>
+<h2 id="1">1. 实验目的</h2>
+<ul>
+<li>理解 KASAN（Kernel Address Sanitizer）检测内存错误的原理，学会逐字段阅读 KASAN 崩溃报告</li>
+<li>理解 KCOV 内核覆盖率采集机制，以及覆盖率引导模糊测试（coverage-guided fuzzing）的基本思想</li>
+<li>了解 syzkaller 的系统架构（manager / executor / syscall description / 覆盖率反馈循环），并能操作其管理界面</li>
+<li>掌握崩溃复现（reproduce）、最小化（minimize）与根因定位的完整流程，并给出最小修复补丁</li>
+</ul>
+<h2 id="2">2. 实验工具</h2>
+<ul>
+<li>qemu-system-aarch64</li>
+<li>syzkaller（syz-manager、syz-executor，课程网盘提供预编译二进制）</li>
+<li>python3（用于运行报告解析脚本）</li>
+<li>文本编辑器与 diff 工具（用于阅读源码和编写补丁）</li>
+</ul>
+<h2 id="3">3. 背景介绍</h2>
+<h3 id="31-kasan">3.1 KASAN</h3>
+<p>KASAN（Kernel Address Sanitizer）是 Linux 内核自带的动态内存错误检测器。它的核心思想是<strong>影子内存（shadow memory）</strong>：内核将可用内存按 8 字节为一组映射到一片影子区域，每个影子字节记录对应 8 字节中有多少字节是可访问的。分配器（slab）在每块分配的内存前后额外填充<strong>红区（redzone）</strong>，并把红区对应的影子字节标记为不可访问。这样，每次访存指令在被编译器插桩后，都会先查询影子内存：一旦访问落在红区（越界）、已释放的内存（UAF）或未初始化区域，KASAN 就打印一份详细的崩溃报告并终止当前任务。</p>
+<p>KASAN 有多种实现，课程镜像使用 <strong>Generic KASAN</strong>（<code>CONFIG_KASAN_GENERIC</code>），它在 ARM64 上可用，适合调试越界读写和释放后使用问题。可参考 <a href="https://docs.kernel.org/6.12/dev-tools/kasan.html">Linux 内核 KASAN 文档</a>。</p>
+<p>一份典型的 KASAN 报告如下（即本页入门练习使用的<a href="../lab3_assets/sample_kasan_report.txt">合成教学样例</a>）：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code>BUG: KASAN: slab-out-of-bounds in zjufuzz_write+0x40/0x80
+Write of size 4096 at addr ffff00000012f000 by task sample/42
+
+CPU: 0 PID: 42 Comm: sample Not tainted 6.12.109 #1
+Call Trace:
+ zjufuzz_write+0x40/0x80
+ vfs_write+0xa0/0x260
+ ksys_write+0x64/0xc0
+
+Allocated by task 42:
+ zjufuzz_open+0x18/0x60
+ chrdev_open+0x90/0x160
+
+The buggy address belongs to the object at ffff00000012f000
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 4032 bytes inside of
+ 64-byte region [ffff00000012f000, ffff00000012f040)
+</code></pre></div></td></tr></table></div>
+<p>阅读报告时关注以下字段：</p>
+<ul>
+<li><strong><code>BUG:</code> 行</strong>：错误类型（如 <code>slab-out-of-bounds</code>、<code>use-after-free</code>、<code>double-free</code>）和触发访问的函数。</li>
+<li><strong><code>Write/Read of size N at addr ... by task ...</code></strong>：访问方向、字节数、被访问的地址和发起访问的任务。</li>
+<li><strong><code>Call Trace:</code></strong>：触发这次<strong>访问</strong>的调用栈，最上层是出错指令所在的函数。</li>
+<li><strong><code>Allocated by task ...</code></strong>：出错的内存块当初是在哪个调用栈上<strong>分配</strong>的。</li>
+<li><strong><code>Freed by task ...</code></strong>（如果存在）：内存块在哪个调用栈上被<strong>释放</strong>。释放后使用（UAF）和重复释放（double-free）的报告里会有这一段，纯越界的报告里通常没有。</li>
+<li><strong><code>belongs to the cache ... of size N</code> 与 <code>N-byte region [start, end)</code></strong>：该地址落在哪个 slab 缓存、对象多大、地址相对对象的偏移。偏移超出对象范围即可确认越界；偏移仍在对象内则更可能是 UAF 或野指针。</li>
+</ul>
+<p>把「访问栈 + 分配栈 + 释放栈 + 偏移」四类证据合在一起，通常就能区分错误类型并圈定可疑代码行。</p>
+<h3 id="32-kcov">3.2 KCOV</h3>
+<p>KCOV 是内核内置的覆盖率采集机制。开启 <code>CONFIG_KCOV</code>（并配合 <code>CONFIG_KCOV_INSTRUMENT_ALL</code>）后，编译器在每个基本块插入 <code>__sanitizer_cov_trace_pc</code> 调用，把执行到的 PC 记录到<strong>按任务隔离</strong>的缓冲区中，用户态程序可以通过 debugfs（<code>/sys/kernel/debug/kcov</code>）读取。与 KASAN 只在出错时报告不同，KCOV 回答的是"<strong>这段测试输入执行了内核里的哪些代码</strong>"，这正是覆盖率引导模糊测试的基础。</p>
+<h3 id="33-syzkaller">3.3 syzkaller</h3>
+<p><a href="https://github.com/google/syzkaller">syzkaller</a> 是 Google 开源的内核模糊测试框架，其架构分为三部分：</p>
+<ul>
+<li><strong>syz-manager</strong>：运行在宿主机上的管理进程。它维护一个程序（即系统调用序列）语料库，负责变异、拼接程序，生成新输入，并统计覆盖率；同时负责创建/销毁 QEMU 虚拟机、汇总所有崩溃。它自带一个 <strong>Web 管理界面</strong>（默认监听 <code>127.0.0.1:56741</code>），可以实时查看覆盖率曲线、执行数、崩溃列表和每个崩溃对应的日志与复现程序。</li>
+<li><strong>syz-executor</strong>：manager 在每台虚拟机内部署的执行器，负责在客户机里逐条执行系统调用序列，并通过 KCOV 把覆盖率回报给 manager。</li>
+<li><strong>syscall description（syzlang）</strong>：位于 <code>sys/linux/</code> 下的一组 <code>.txt</code> 文件，用结构化语法描述"哪些系统调用、哪些参数取值是合法/值得测试的"。fuzzer 生成的每条程序都由这些描述约束。</li>
+</ul>
+<p>覆盖率反馈循环如下：manager 生成一个系统调用序列 → executor 在虚拟机里执行 → KCOV 记录这次执行覆盖到的内核代码 → 若覆盖了<strong>此前没到过的代码</strong>，该序列被保留进语料库，作为后续变异的种子；否则丢弃。这样测试会自动向"能触达新代码"的方向进化。当某条序列触发内核崩溃（配合 KASAN 则包括内存错误）时，manager 记录一次 crash，并可进一步用 <code>syz-repro</code> 把触发崩溃的序列<strong>最小化</strong>、用 <code>syz-prog2c</code> 把它转换为可独立编译运行的 C 程序（reproducer）。</p>
+<p>syzkaller 的 <a href="https://github.com/google/syzkaller/blob/master/docs/linux/setup_linux-host_qemu-vm_arm64-kernel.md">Linux host / QEMU / ARM64 官方指南</a>说明了 KASAN、KCOV、debugfs、SSH 和 QEMU 镜像的完整要求，自建环境可按该指南操作。</p>
+<h2 id="4">4. 实验环境与介绍</h2>
+<h3 id="41">4.1 实验环境</h3>
+<p>本实验使用与 Lab 1/2 <strong>不同的内核环境</strong>：ARM64 QEMU + <strong>Linux 6.12.109 + Generic KASAN + KCOV</strong>。完整资源包发布后，助教会通过课程网盘提供：<code>Image</code>、<code>vmlinux</code>、<code>System.map</code>、内核 <code>config</code>、<code>SHA256SUMS</code> 清单、ARM64 rootfs 与 SSH key、<code>syz-manager</code>/<code>syz-executor</code> 二进制、适配好的 <code>manager.cfg</code>，以及待修复的驱动源码 <code>zjufuzz.c</code>。</p>
+<p>下载后首先核验镜像完整性：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>sha256sum<span class="w"> </span>-c<span class="w"> </span>SHA256SUMS
+</code></pre></div></td></tr></table></div>
+<p>内核与驱动的构建方法见<a href="https://github.com/syssec-labhub/syssec-labhub/tree/main/resources/lab3">助教构建套件</a>。学生不需要从零编译内核或 syzkaller。</p>
+<h3 id="42-zjufuzz">4.2 zjufuzz 教学驱动</h3>
+<p>实验提供一个名为 <code>zjufuzz</code> 的字符设备驱动（源码 <code>zjufuzz.c</code>），向用户态暴露以下接口：</p>
+<ul>
+<li><strong>open</strong>：打开 <code>/dev/zjufuzz</code>，驱动在内核中为设备分配一块 <strong>64 字节</strong>的缓冲区。</li>
+<li><strong>read / write</strong>：读写该缓冲区。</li>
+<li><strong>ioctl</strong>：命令号 <code>ZJU_RESIZE</code>（<code>_IO('Z', 1)</code>），释放当前缓冲区并按指定大小重新分配。</li>
+</ul>
+<p>该驱动中植入了<strong>一个堆越界写漏洞</strong>，作为本实验 fuzzing 的目标。和 Lab 2 的 zjudev 类似，对同一个设备文件多次 open 会得到指向同一块缓冲区的多个引用，ioctl 可以改变缓冲区大小以影响 slab 分配行为——思考这些接口组合起来能怎样踩到 64 字节缓冲区的边界之外。</p>
+<h3 id="43">4.3 手工启动与复现</h3>
+<p>不使用 syzkaller 时，可以直接用 QEMU 快照模式启动内核，手工复现崩溃（<code>-snapshot</code> 保证磁盘镜像不被修改，退出 QEMU 按 <code>Ctrl-A</code> 再按 <code>X</code>）：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>./run.sh<span class="w"> </span>rootfs.img
+</code></pre></div></td></tr></table></div>
+<p>进入客户机后挂载伪文件系统，然后触发驱动漏洞：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code>mount<span class="w"> </span>-t<span class="w"> </span>proc<span class="w"> </span>proc<span class="w"> </span>/proc
+mount<span class="w"> </span>-t<span class="w"> </span>sysfs<span class="w"> </span>sysfs<span class="w"> </span>/sys
+mount<span class="w"> </span>-t<span class="w"> </span>devtmpfs<span class="w"> </span>devtmpfs<span class="w"> </span>/dev
+dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/zjufuzz<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">4096</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1</span><span class="w">   </span><span class="c1"># 一次超出 64 字节缓冲区的写入</span>
+</code></pre></div></td></tr></table></div>
+<p><code>zjufuzz_write()</code> 未对用户提供的长度做边界检查，KASAN 会在控制台打印一份 slab-out-of-bounds 报告（格式同 3.1 节）。命令行参数 <code>kasan_multi_shot</code> 允许 KASAN 连续报告多个错误而不在第一次报告后挂起系统。</p>
+<h2 id="5">5. 实验任务</h2>
+<p>本实验共 5 个 Task，难度逐层递进。<strong>请先自己动手，再对照工具输出检查</strong>——直接用脚本生成答案无法达到练习目的。</p>
+<h3 id="task-0kasan">Task 0：KASAN 报告入门</h3>
+<p>下载<a href="../lab3_assets/lab3-triage-starter.zip">入门练习包</a>（也可单独下载<a href="../lab3_assets/sample_kasan_report.txt">练习报告</a>与<a href="../lab3_assets/triage.py">解析脚本</a>），解压后运行：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>python3<span class="w"> </span>triage.py<span class="w"> </span>sample_kasan_report.txt
+</code></pre></div></td></tr></table></div>
+<p>这是一份<strong>合成的教学样例</strong>，仅用于熟悉报告字段，不是实际 fuzzing 的发现。请先<strong>不借助脚本</strong>、对照 3.1 节的字段说明手工阅读报告，再运行脚本核对你的理解是否一致。</p>
+<h3 id="task-1-kasan">Task 1：手工解析 KASAN 报告</h3>
+<p>Task 1 的正式提交要在镜像包发布后使用<strong>真实</strong> KASAN 报告（自己 fuzz 出来的，或资源包随附的），先手工标注以下内容，再用 <code>triage.py</code> 自查：</p>
+<ol>
+<li>KASAN 报告的错误类型、访问方向和字节数是什么？</li>
+<li>触发访问的调用栈与对象的分配、释放调用栈分别在哪里？</li>
+<li>依据这些证据，根因更接近越界、释放后使用，还是重复释放？哪一行代码需要进一步检查？</li>
+<li>什么证据表明修复后原 reproducer 不再触发同一错误？</li>
+</ol>
+<h3 id="task-2">Task 2：覆盖率引导的模糊测试</h3>
+<p>确认 <code>manager.cfg</code> 中的 <code>kernel_obj</code>、<code>image</code>、<code>sshkey</code> 路径与本机一致后，启动 manager：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>./syz-manager<span class="w"> </span>-config<span class="w"> </span>manager.cfg
+</code></pre></div></td></tr></table></div>
+<p>然后在浏览器打开 <code>http://127.0.0.1:56741</code> 查看 Web 界面。实验内容：</p>
+<ul>
+<li>观察首页的 <strong>coverage / execs 曲线</strong>，理解"覆盖率增长 → 语料库增长"的正反馈；在报告中记录目标设备接口、运行时长（建议不少于 1 小时）、执行次数与覆盖率变化。</li>
+<li>打开 <strong>Crashes</strong> 页面查看崩溃列表：每个崩溃有一个标题（通常是第一帧内核符号），点击可查看原始日志。记录所有崩溃条目及其标题。<blockquote>
+<p>提示：内核崩溃后对应虚拟机会被 manager 自动重启，不需要人工干预；KASAN 报告中出现的 <code>kasan_multi_shot</code> 相关行为属于预期。</p>
+<p>Question 1：为什么 fuzzing 早期覆盖率增长很快，之后逐渐变慢？这和语料库的保留策略有什么关系？</p>
+<p>Question 2：<code>zjufuzz</code> 的漏洞是一次普通的堆越界写，为什么 KASAN 能在<strong>没有崩溃</strong>的情况下发现它？</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="task-3">Task 3：复现与最小化</h3>
+<p>从 Task 2 的崩溃中选取一个，先在干净快照上独立复现（可用 4.3 节的 <code>run.sh</code>，把复现程序放进 rootfs 或通过共享目录传入），再使用 syzkaller 提供的最小化工具缩减系统调用序列：</p>
+<ul>
+<li>在 dashboard 的崩溃详情页，带有 <code>repro</code> 标记的崩溃表示 manager 已自动完成复现与最小化，可直接查看最小化后的 syzlang 程序。</li>
+<li>使用 <code>syz-prog2c</code> 可把 syzlang 程序转换为可独立编译的 C reproducer（Lab 1/2 中我们一直是手写 PoC，这一步就是它的自动化版本）。</li>
+</ul>
+<p>提交原始程序、最小 reproducer、复现命令、KASAN 报告及最小化前后的对比。若运行时间内没有发现新崩溃，可使用资源包随附的固定样例，重点是复现与解释过程。</p>
+<blockquote>
+<p>Question 3：为什么"最小化"对定位根因很重要？一个 200 行的复现程序和一个 3 行的复现程序，对 patch 作者意味着什么？</p>
+</blockquote>
+<h3 id="task-4">Task 4：定位、修复与回归</h3>
+<p>根据 <code>zjufuzz.c</code> 源码和分配/访问调用栈写出根因假设，提交<strong>最小补丁</strong>和解释（提示：问题出在一次没有做边界检查的拷贝，思考正确的修复位置是拷贝点还是分配点，以及为什么）。</p>
+<p>对比修复前后同一 reproducer 的结果：修复后重新编译驱动（只需编译模块，无需重编内核）并运行 reproducer，确认 KASAN 不再报告同一错误；再继续运行一段定向 fuzzing，说明是否出现同类崩溃。修复未通过复现或引入新错误时，可以提交失败分析获取部分反馈。</p>
+<h2 id="6">6. 实验提交</h2>
+<p>请同学们在学在浙大上提交实验报告。格式要求为 pdf，命名为学号+姓名+lab3.pdf。实验报告需要包含以下内容：</p>
+<ul>
+<li>Task 1 的 KASAN 报告手工标注（错误类型、三个调用栈、偏移分析）与自查结果</li>
+<li>Task 2 的运行记录（时长、执行数、覆盖率变化、崩溃列表）</li>
+<li>Task 3 的原始程序、最小 reproducer、复现命令与最小化前后对比</li>
+<li>Task 4 的最小补丁、根因分析和修复前后的对比结果</li>
+<li>回答 Question 1~3</li>
+<li>报告中记录所用镜像的 SHA256、内核版本、syzkaller 版本、配置与关键命令，保证结果可复现</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>
