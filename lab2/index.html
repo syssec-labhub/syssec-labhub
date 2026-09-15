@@ -1409,7 +1409,7 @@ p1<span class="w"> </span>Addr:0x5605b5dde2a0,world
 <p>其中 qemu.sh 是运行 qemu 的脚本，rootfs.img 为文件系统镜像，vmlinux 为未压缩的内核。可以利用 gdb-multiarch 和 qemu 对vmlinux 进行调试。</p>
 <p>同时提供了有 BUG 的设备驱动代码，同学们可以自行查看。</p>
 <h3 id="51">5.1 实验环境搭建</h3>
-<p>通过<a href="https://pan.zju.edu.cn/share/913fb168cf0dc795da62abe451">浙大云盘</a> 或 <a href="https://pan.baidu.com/s/1Ri2aWyBBblkbD2GtnmCiWQ?pwd=adjg">百度网盘</a>下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。该压缩包对应 Task 1–3 的 Linux 5.15 环境；Task 4 使用独立的 6.12.109 对照镜像，获取与运行方式见 6.4 节。</p>
+<p>通过<a href="https://pan.zju.edu.cn/share/913fb168cf0dc795da62abe451">浙大云盘</a> 或 <a href="https://pan.baidu.com/s/1Ri2aWyBBblkbD2GtnmCiWQ?pwd=adjg">百度网盘</a>下载本次实验压缩包，并解压到lab1的 virtual box 实验镜像中。该压缩包对应 Task 1–3 的 Linux 5.15 环境；Task 4 使用已发布的独立 6.12.109 对照镜像，下载与运行方式见 6.4 节。</p>
 <p>解压之后路径如下</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -1711,11 +1711,11 @@ password：123
 <p>Question 4:为什么第二步可以直接ret获取到 <code>tty_struct</code>结构体的地址？ret 执行前后的控制流是什么样的？</p>
 </blockquote>
 <h3 id="64-task4-jop-against-kcfilinux-612109">6.4 Task4: JOP against KCFI（Linux 6.12.109）</h3>
-<p>本节使用<strong>独立的 6.12.109 防护实验环境</strong>。上文 Task 1–3 与原下载包仍使用 Linux 5.15；原包中的 <code>kernel/cfi</code> 是旧实验镜像，不能当作本节的 KCFI 镜像。新版资源的构建、启动和验证方法见 <a href="https://github.com/syssec-labhub/syssec-labhub/tree/main/resources/lab2-kcfi">Lab 2 KCFI 资源说明</a>。构建脚本从官方 6.12.109 源码生成 <code>kernel/nocfi/</code> 和 <code>kernel/kcfi/</code> 两套镜像；两者使用相同的配置基础，以 KCFI 开关作对比。本节采用上游内核自带的 LKDTM 自测，不依赖旧版漏洞驱动。</p>
+<p>本节使用<strong>独立的 6.12.109 防护实验环境</strong>。上文 Task 1–3 与原下载包仍使用 Linux 5.15；原包中的 <code>kernel/cfi</code> 是旧实验镜像，不能当作本节的 KCFI 镜像。请下载 <a href="https://pan.baidu.com/s/1mLkhcOAkKTvo4wf6N3r_0g?pwd=5pqs">lab2-task4.zip</a>（提取码：<code>5pqs</code>），解压后按包内说明启动 <code>kernel/nocfi/</code> 和 <code>kernel/kcfi/</code> 两套预编译镜像；两者使用相同的配置基础，仅以 KCFI 开关作对比。本节采用上游内核自带的 LKDTM 自测，不依赖旧版漏洞驱动。</p>
 <p>KCFI 是 Clang 针对内核等底层软件的<strong>前向控制流完整性</strong>检查：编译器在间接调用点比较目标函数的类型标识，不匹配时触发 CFI 故障。它不要求 LTO，也不会把函数指针替换成旧式 CFI 跳转表引用。因此，任意 <code>br/blr</code> gadget 不一定能作为 <code>tty_operations</code> 间接调用的目标；但<strong>类型兼容的目标仍可能通过检查</strong>，KCFI 也不负责修复 UAF。有关机制可参考 <a href="https://clang.llvm.org/docs/ControlFlowIntegrity.html#fsanitize-kcfi">Clang KCFI 文档</a> 与 <a href="https://docs.kernel.org/fault-injection/provoke-crashes.html">Linux LKDTM 文档</a>。</p>
 <p>实验内容如下：</p>
 <ul>
-<li>分别启动 <code>nocfi</code> 与 <code>kcfi</code> 镜像，执行资源说明中的 <code>CFI_FORWARD_PROTO</code> 自测。它先进行类型匹配的间接调用，再进行类型不匹配的间接调用。记录两种镜像的控制台输出；KCFI 镜像的故障是<strong>预期实验结果</strong>，需要重启 QEMU 继续操作。</li>
+<li>分别启动 <code>nocfi</code> 与 <code>kcfi</code> 镜像，按压缩包内说明执行 <code>CFI_FORWARD_PROTO</code> 自测。它先进行类型匹配的间接调用，再进行类型不匹配的间接调用。记录两种镜像的控制台输出；KCFI 镜像的故障是<strong>预期实验结果</strong>，需要重启 QEMU 继续操作。</li>
 <li>使用 <code>llvm-objdump-18 -d kernel/kcfi/vmlinux</code> 查找一个间接调用及其 KCFI 类型检查，提交相关汇编片段和解释。报告中说明为何 Task 3 中的任意 gadget 目标在 KCFI 下可能被拒绝，以及为什么函数类型兼容并不等于程序安全。</li>
 </ul>
 <p><strong>提交材料</strong>：<code>nocfi</code>/<code>kcfi</code> 的内核版本与配置、两次自测的控制台截图或日志、所选间接调用汇编片段，以及上述机制分析。这个独立自测用于验证 KCFI 的类型检查；它不等同于在 6.12 上重新运行旧版 JOP PoC。</p>
