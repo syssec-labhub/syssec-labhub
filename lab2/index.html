@@ -1712,6 +1712,16 @@ password：123
 </blockquote>
 <h3 id="64-task4-jop-against-kcfilinux-612109">6.4 Task4: JOP against KCFI（Linux 6.12.109）</h3>
 <p>本节使用<strong>独立的 6.12.109 防护实验环境</strong>。上文 Task 1–3 与原下载包仍使用 Linux 5.15；原包中的 <code>kernel/cfi</code> 是旧实验镜像，不能当作本节的 KCFI 镜像。请下载 <a href="https://pan.baidu.com/s/1mLkhcOAkKTvo4wf6N3r_0g?pwd=5pqs">lab2-task4.zip</a>（提取码：<code>5pqs</code>），解压后按包内说明启动 <code>kernel/nocfi/</code> 和 <code>kernel/kcfi/</code> 两套预编译镜像；两者使用相同的配置基础，仅以 KCFI 开关作对比。本节采用上游内核自带的 LKDTM 自测，不依赖旧版漏洞驱动。</p>
+<div class="admonition warning">
+<p class="admonition-title">宿主环境需自行准备</p>
+<p><code>lab2-task4.zip</code> 不包含宿主操作系统。请自行下载并安装 <a href="https://releases.ubuntu.com/noble/">Ubuntu 24.04 LTS</a>；如果系统中尚未安装 QEMU，请安装提供 <code>qemu-system-aarch64</code> 的 <a href="https://packages.ubuntu.com/noble/qemu-system-arm"><code>qemu-system-arm</code></a> 软件包：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>qemu-system-arm
+qemu-system-aarch64<span class="w"> </span>--version
+</code></pre></div></td></tr></table></div>
+</div>
 <p>KCFI 是 Clang 针对内核等底层软件的<strong>前向控制流完整性</strong>检查：编译器在间接调用点比较目标函数的类型标识，不匹配时触发 CFI 故障。它不要求 LTO，也不会把函数指针替换成旧式 CFI 跳转表引用。因此，任意 <code>br/blr</code> gadget 不一定能作为 <code>tty_operations</code> 间接调用的目标；但<strong>类型兼容的目标仍可能通过检查</strong>，KCFI 也不负责修复 UAF。有关机制可参考 <a href="https://clang.llvm.org/docs/ControlFlowIntegrity.html#fsanitize-kcfi">Clang KCFI 文档</a> 与 <a href="https://docs.kernel.org/fault-injection/provoke-crashes.html">Linux LKDTM 文档</a>。</p>
 <p>实验内容如下：</p>
 <ul>

@@ -920,7 +920,17 @@
 <p>Lab 1、Lab 2 从一个<strong>已知</strong>的内存错误出发，研究如何利用它以及内核如何防护；本实验从<strong>自动发现和诊断</strong>出发，练习完整的漏洞处理流程：<strong>发现 → 复现 → 最小化 → 定位 → 修复</strong>。本实验为选做实验，成绩评定方式以课程通知为准。</p>
 <div class="admonition info">
 <p class="admonition-title">实验资源</p>
-<p>完整的 <a href="https://pan.baidu.com/s/1TUxWoZEwScCmd_2YcvyU8A?pwd=spjv">lab3.zip</a>（提取码：<code>spjv</code>）已经发布，包含 Task 2–4 所需的 ARM64 QEMU + Linux 6.12.109 + KASAN/KCOV 内核、<code>zjufuzz</code> 教学驱动、syzkaller 与 rootfs；本页的 KASAN 报告分析练习和脚本也可直接下载运行。Lab 3 使用独立环境，请勿使用 Lab 1/2 的 5.15 镜像。</p>
+<p>完整的 <a href="https://pan.baidu.com/s/1TUxWoZEwScCmd_2YcvyU8A?pwd=spjv">lab3.zip</a>（提取码：<code>spjv</code>）已经发布，包含 Task 2–4 所需的预编译 Linux 6.12.109 + KASAN/KCOV 内核、<code>zjufuzz</code> 教学驱动、syzkaller 与 rootfs；本页的 KASAN 报告分析练习和脚本也可直接下载运行。Lab 3 使用独立环境，请勿使用 Lab 1/2 的 5.15 镜像。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">宿主环境需自行准备</p>
+<p><code>lab3.zip</code> 不包含 Ubuntu 24.04 LTS 和 QEMU。请自行下载并安装 <a href="https://releases.ubuntu.com/noble/">Ubuntu 24.04 LTS</a>，然后安装提供 <code>qemu-system-aarch64</code> 的 <a href="https://packages.ubuntu.com/noble/qemu-system-arm"><code>qemu-system-arm</code></a> 软件包：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>qemu-system-arm
+qemu-system-aarch64<span class="w"> </span>--version
+</code></pre></div></td></tr></table></div>
 </div>
 <h2 id="1">1. 实验目的</h2>
 <ul>
