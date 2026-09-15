@@ -1,9 +1,7 @@
 # Linux内核漏洞攻防 - ROP攻击与防护
 
-!!! info "实验环境：迁移到 Linux 6.12 LTS"
-    本学期实验环境由 Ubuntu 20.04 + Linux 5.15 迁移到 **Ubuntu 24.04 LTS + QEMU/AArch64 + Linux 6.12.109 LTS**（[长期维护分支说明](https://www.kernel.org/releases.html)、[官方源码](https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.109.tar.xz)）。新版环境用 QEMU 启动预编译的 `Image`/`vmlinux` 和课程 rootfs，并提供一键构建与启动脚本；镜像由助教构建后通过课程网盘发布。**发布前请勿把本页的 5.15 镜像当作 6.12 环境。**
-
-    过渡期内本页 Task 1–4 仍可在原有 5.15 教学镜像上完成。注意 6.12 修改了凭据相关 API（见 3.4 节），因此 Task 2/3 的提权链在 6.12 上不能直接照搬，升级版任务需另行设计。
+!!! info "实验环境说明"
+    本实验**继续使用原有环境：Ubuntu 20.04 + Linux 5.15**（QEMU/AArch64），虚拟机与镜像的下载方式、网盘链接与往年完全一致（见 4.1 节）。本学期新增的 **Linux 6.12.109 LTS** 内核**不用于 Lab 1**，仅用于 [Lab 2 Task 4（KCFI 对照）](lab2.md)与选做的 [Lab 3（KASAN/syzkaller）](lab3.md)，其镜像将由助教单独构建并通过课程网盘发布。
 
 ## 1. 实验目的
 
@@ -202,10 +200,10 @@ stack canary 在函数的开始时push到栈上，在函数返回前，检查是
 
 Linux 内核主要通过以下两个 API 修改进程权限：
 
-* `prepare_kernel_cred(daemon)`：依据 `daemon` 的凭据构造一份新的 cred；当 `daemon` 为 `&init_task` 时，得到 uid=0、拥有完整 capability 的 root 凭据。
+* `prepare_kernel_cred(daemon)`：依据 `daemon` 的凭据构造一份新的 cred；5.15 内核中传入 `NULL` 时会以 `init_cred` 为模板，构造出 uid=0、拥有完整 capability 的 root 凭据。
 * `commit_creds(new)`：把 `new` 安装到当前进程，从而改变它的权限。
 
-5.15 时代的经典 ROP 提权链是 `commit_creds(prepare_kernel_cred(0))`。**这条链在 Linux 6.12 上已经失效**：`prepare_kernel_cred()` 收到 `NULL` 时会触发 `WARN_ON_ONCE` 并返回 `NULL`，特权凭据必须显式传入 `&init_task`。因此，把旧 PoC 只改内核版本并不能得到可用的新实验，升级版需要重新设计凭据相关的教学任务与镜像并单独验证。本页 Task 1–3 仍按 5.15 镜像上的旧方法完成。
+本实验基于 5.15 内核，经典 ROP 提权链 `commit_creds(prepare_kernel_cred(0))` 直接可用。**注意**：Linux 6.12 已修改该 API——`prepare_kernel_cred()` 收到 `NULL` 时会触发 `WARN_ON_ONCE` 并返回 `NULL`，特权凭据必须显式传入 `&init_task`，因此旧 PoC 不能直接照搬到 6.12。课程中的 6.12.109 内核只用于 [Lab 2 Task 4](lab2.md)（KCFI 对照）与选做的 [Lab 3](lab3.md)（KASAN/syzkaller），不影响本实验。
 
 ## 4.实验环境与介绍
 
